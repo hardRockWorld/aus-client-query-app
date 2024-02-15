@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import {
     onAuthStateChanged
 } from 'firebase/auth';
-import { auth } from '@/db/fb';
-import Login from '@/components/Login';
-import QueryForm from '@/components/QueryForm';
-import QueryList from '@/components/QueryList';
+import { auth } from '@/db/fb.js'
+import Login from '@/components/Login.vue';
+import QueryForm from '@/components/QueryForm.vue';
+import QueryList from '@/components/QueryList.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
