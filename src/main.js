@@ -1,21 +1,21 @@
-import '@ntohq/buefy-next/dist/buefy.css'
+import "@ntohq/buefy-next/dist/buefy.css";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import buefy  from '@ntohq/buefy-next'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import buefy from "@ntohq/buefy-next";
 
-import App from './App.vue'
+import App from "./App.vue";
 
-import router from './router/router.js'
+import router from "./router/router.js";
 
-const app = createApp(App)
+const app = createApp(App);
 
-const pinia = createPinia()
+const pinia = createPinia();
 app.use(pinia);
 
-app.use(router)
+app.use(router);
 
 // Register your buefy plugin
 app.use(buefy);
 
-app.mount('#app');
+app.mount("#app");
