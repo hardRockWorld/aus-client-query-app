@@ -30,13 +30,52 @@
       ></b-input>
     </b-field>
 
-    <b-field
-      label="Username"
-      :label-position="labelPosition"
-      type="is-success"
-      message="This username is available"
-    >
-      <b-input value="johnsilver" maxlength="30"></b-input>
+    <b-field label="Address" :label-position="labelPosition">
+      <b-input
+        type="text"
+        v-model="query.clientAddress"
+        id="client_address"
+        name="client_address"
+        placeholder="Client address"
+      ></b-input>
+    </b-field>
+
+    <b-field label="Age" :label-position="labelPosition">
+      <b-numberinput
+        :min="0"
+        :max="120"
+        v-model="query.clientAge"
+        id="client_age"
+        name="client_age"
+        placeholder="Client age"
+      ></b-numberinput>
+    </b-field>
+
+    <div class="block">
+      <b-radio v-model="query.clientGender" native-value="Male"> Male</b-radio>
+      <b-radio v-model="query.clientGender" native-value="Female">
+        Female
+      </b-radio>
+    </div>
+
+    <b-field label="Contact No." :label-position="labelPosition">
+      <b-input
+        type="tel"
+        v-model="query.clientContactNo"
+        id="client_contactNo"
+        name="client_contactNo"
+        placeholder="Mobile Phone Number"
+      ></b-input>
+    </b-field>
+
+    <b-field label="Whatsapp No." :label-position="labelPosition">
+      <b-input
+        type="tel"
+        v-model="query.clientContactNo"
+        id="client_contactNo"
+        name="client_contactNo"
+        placeholder="Whatsapp No."
+      ></b-input>
     </b-field>
 
     <b-field label="Password" :label-position="labelPosition" type="is-warning">
@@ -139,7 +178,7 @@ const sessionStore = useSessionStore();
 const queryStore = useQueryStore();
 
 const loading = ref(false);
-const labelPosition = "on-border";
+const labelPosition = "inside";
 
 const blankQuery = {
   clientName: "",
