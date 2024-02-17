@@ -1,6 +1,6 @@
 <template>
   <section class="query-form">
-    <div class="block">
+    <div class="query-form-title">
       <h1>Enter Client Details</h1>
     </div>
 
@@ -15,11 +15,7 @@
       ></b-input>
     </b-field>
 
-    <b-field
-      label="Email"
-      :label-position="labelPosition"
-      message="This email is invalid"
-    >
+    <b-field label="Email" :label-position="labelPosition">
       <b-input
         type="email"
         maxlength="30"
@@ -52,8 +48,8 @@
       ></b-numberinput>
     </b-field>
 
-    <div class="block" required>
-      <b-radio v-model="query.clientGender" native-value="Male"> Male</b-radio>
+    <div class="block">
+      <b-radio v-model="query.clientGender" native-value="Male">Male</b-radio>
       <b-radio v-model="query.clientGender" native-value="Female">
         Female
       </b-radio>
@@ -74,8 +70,8 @@
       <b-input
         type="tel"
         v-model="query.clientWhatsappNo"
-        id="client_contactNo"
-        name="client_contactNo"
+        id="client_clientWhatsappNo"
+        name="client_clientWhatsappNo"
         placeholder="Whatsapp No."
       ></b-input>
     </b-field>
@@ -183,14 +179,9 @@
         type="submit"
         @click.prevent="submit"
         :loading="loading"
-        :message="notificationMsg"
       >
         Save
       </b-button>
-
-      <template #message v-if="notificationMsg">
-        <div>{{ notificationMsg }}</div>
-      </template>
     </b-field>
   </section>
 </template>
@@ -204,6 +195,7 @@ import { ToastProgrammatic as Toast } from "@ntohq/buefy-next";
 
 const sessionStore = useSessionStore();
 const queryStore = useQueryStore();
+const toast = new Toast();
 
 const loading = ref(false);
 const labelPosition = "inside";
@@ -244,6 +236,10 @@ const submit = async () => {
 
     // Notify user with message
     notificationMsg.value = `Query created | sln : ${submitResult.sln}`;
+    toast.open({
+      message: notificationMsg.value,
+      type: "is-success",
+    });
     query.value = { ...blankQuery };
     loading.value = false;
   } else {
@@ -263,7 +259,6 @@ const isSaveButtonDisabled = computed(() => {
 });
 
 onMounted(() => {
-  const toast = new Toast();
   toast.open({
     message: "Logged in!",
     type: "is-success",
@@ -274,9 +269,13 @@ onMounted(() => {
 <style scoped>
 .query-form {
   margin: auto;
-  padding: 4rem;
+  padding: 2rem;
   max-width: 600px;
   border: rebeccapurple solid;
+}
+
+.query-form-title {
+  margin-bottom: 1rem;
 }
 
 .block {
