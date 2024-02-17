@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="query-form">
     <div class="block">
       <h1>Enter Client Details</h1>
     </div>
@@ -37,6 +37,7 @@
         id="client_address"
         name="client_address"
         placeholder="Client address"
+        required
       ></b-input>
     </b-field>
 
@@ -51,7 +52,7 @@
       ></b-numberinput>
     </b-field>
 
-    <div class="block">
+    <div class="block" required>
       <b-radio v-model="query.clientGender" native-value="Male"> Male</b-radio>
       <b-radio v-model="query.clientGender" native-value="Female">
         Female
@@ -65,58 +66,40 @@
         id="client_contactNo"
         name="client_contactNo"
         placeholder="Mobile Phone Number"
+        required
       ></b-input>
     </b-field>
 
     <b-field label="Whatsapp No." :label-position="labelPosition">
       <b-input
         type="tel"
-        v-model="query.clientContactNo"
+        v-model="query.clientWhatsappNo"
         id="client_contactNo"
         name="client_contactNo"
         placeholder="Whatsapp No."
       ></b-input>
     </b-field>
 
-    <b-field label="Password" :label-position="labelPosition" type="is-warning">
-      <b-input value="123" type="password" maxlength="30"></b-input>
-      <template #message>
-        <div>Password is too short</div>
-        <div>Password must have at least 8 characters</div>
-      </template>
+    <b-field label="Called For" :label-position="labelPosition">
+      <b-input
+        type="text"
+        v-model="query.calledFor"
+        id="client_calledFor"
+        name="client_calledFor"
+        placeholder="Client Called For"
+        required
+      ></b-input>
     </b-field>
 
-    <b-field label="Subject" :label-position="labelPosition">
-      <b-select placeholder="Select a subject">
-        <option value="1">Option 1</option>
-        <option value="2">Option 2</option>
-      </b-select>
-    </b-field>
-
-    <b-field label="Message" :label-position="labelPosition">
-      <b-input maxlength="200" type="textarea"></b-input>
-    </b-field>
-
-    <b-field label="Find a JS framework" :label-position="labelPosition">
-      <b-autocomplete
-        rounded
-        :data="['jQuery', 'Vue', 'React']"
-        placeholder="e.g. jQuery"
-        icon="magnify"
-        clearable
-        @select="(option) => (selected = option)"
-      >
-        <template #empty>No results found</template>
-      </b-autocomplete>
-    </b-field>
-
-    <b-field label="Select a date" :label-position="labelPosition">
-      <b-datepicker
-        placeholder="Click to select..."
-        icon="calendar-today"
-        trap-focus
-      >
-      </b-datepicker>
+    <b-field label="Query Received By" :label-position="labelPosition">
+      <b-input
+        type="text"
+        v-model="query.queryReceivedBy"
+        id="client_queryReceivedBy"
+        name="client_queryReceivedBy"
+        placeholder="Client Query Received By"
+        required
+      ></b-input>
     </b-field>
 
     <b-field label="Select datetime" :label-position="labelPosition">
@@ -125,17 +108,46 @@
         placeholder="Click to select..."
         icon="calendar-today"
         horizontal-time-picker
+        v-model="query.queryDate"
+        id="client_queryDate"
+        name="client_queryDate"
+        required
       >
       </b-datetimepicker>
     </b-field>
 
-    <b-field label="Number!" :label-position="labelPosition">
-      <b-numberinput placeholder="99" :min="95"></b-numberinput>
+    <!--    <b-field label="Query Status" :label-position="labelPosition">-->
+    <!--      <b-dropdown aria-role="list" v-model="query.queryStatus">-->
+    <!--        <template #trigger="{ active }">-->
+    <!--          <b-button-->
+    <!--            label="Click me!"-->
+    <!--            type="is-primary"-->
+    <!--            :icon-right="active ? 'menu-up' : 'menu-down'"-->
+    <!--          />-->
+    <!--          {{ query.queryStatus }}-->
+    <!--        </template>-->
+
+    <!--        <b-dropdown-item aria-role="listitem">Received</b-dropdown-item>-->
+    <!--        <b-dropdown-item aria-role="listitem">Discuss</b-dropdown-item>-->
+    <!--        <b-dropdown-item aria-role="listitem">Closed</b-dropdown-item>-->
+    <!--      </b-dropdown>-->
+    <!--    </b-field>-->
+
+    <b-field label="Subject" :label-position="labelPosition">
+      <b-input
+        maxlength="300"
+        type="textarea"
+        v-model="query.querySubject"
+        id="client_querySubject"
+        name="client_querySubject"
+        placeholder="Client Query Subject"
+        required
+      ></b-input>
     </b-field>
 
-    <b-field label="Add some tags" :label-position="labelPosition">
+    <b-field label="Notes: add some tags" :label-position="labelPosition">
       <b-taginput
-        :value="['My first tag', 'My second tag']"
+        v-model="query.notes"
         ellipsis
         icon="label"
         placeholder="Add a tag"
@@ -143,26 +155,42 @@
       </b-taginput>
     </b-field>
 
-    <b-field label="Select time" :label-position="labelPosition">
-      <b-timepicker rounded placeholder="Click to select..." icon="clock">
-      </b-timepicker>
+    <b-field label="Resolution Given" :label-position="labelPosition">
+      <b-input
+        maxlength="300"
+        type="textarea"
+        v-model="query.resolutionGiven"
+        id="client_resolution"
+        name="client_resolution"
+        placeholder="Client Resolution"
+      ></b-input>
     </b-field>
 
-    <hr />
-    <p class="title is-6">Also works for grouped field and with addons.</p>
-
-    <b-field label="Search..." :label-position="labelPosition" grouped>
-      <b-input placeholder="Search..." type="search"></b-input>
-      <p class="control">
-        <b-button class="button is-primary">Search</b-button>
-      </p>
+    <b-field label="Remarks" :label-position="labelPosition">
+      <b-input
+        maxlength="100"
+        type="textarea"
+        v-model="query.remarks"
+        id="client_remarks"
+        name="client_remarks"
+        placeholder="Remarks To Client"
+      ></b-input>
     </b-field>
 
-    <b-field label="Search..." :label-position="labelPosition">
-      <b-input placeholder="Search..." type="search"></b-input>
-      <p class="control">
-        <b-button class="button is-primary">Search</b-button>
-      </p>
+    <b-field>
+      <b-button
+        class="button is-primary"
+        type="submit"
+        @click.prevent="submit"
+        :loading="loading"
+        :message="notificationMsg"
+      >
+        Save
+      </b-button>
+
+      <template #message v-if="notificationMsg">
+        <div>{{ notificationMsg }}</div>
+      </template>
     </b-field>
   </section>
 </template>
@@ -191,9 +219,9 @@ const blankQuery = {
   calledFor: "",
   querySubject: "",
   queryReceivedBy: "",
-  queryDate: Date.now(),
+  queryDate: new Date(),
   queryStatus: "placed",
-  notes: "",
+  notes: [""],
   resolutionGiven: "",
   remarks: "",
 };
@@ -242,3 +270,16 @@ onMounted(() => {
   });
 });
 </script>
+
+<style scoped>
+.query-form {
+  margin: auto;
+  padding: 4rem;
+  max-width: 600px;
+  border: rebeccapurple solid;
+}
+
+.block {
+  margin: 1rem;
+}
+</style>

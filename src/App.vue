@@ -70,9 +70,9 @@ const logout = () => {
           </div>
 
           <div class="navbar-middle">
-            <h4 v-if="proxyIsLoggedIn && currentUser">
-              Welcome, {{ currentUser.name }}
-            </h4>
+            <h2 v-if="proxyIsLoggedIn && currentUser" class="welcome-message">
+              Welcome, {{ currentUser.email }}
+            </h2>
           </div>
 
           <div id="navbarMenuHeroA" class="navbar-menu">
@@ -114,7 +114,7 @@ const logout = () => {
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
       <div class="container has-text-centered">
-        <router-view class="main"> </router-view>
+        <router-view class="main"></router-view>
       </div>
     </div>
   </section>
@@ -140,5 +140,16 @@ const logout = () => {
 .footer {
   margin-top: 0;
   max-height: 0;
+}
+
+.navbar-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Ensure the middle section takes up the full width */
+}
+
+.welcome-message {
+  margin: 0; /* Remove default margin to center properly */
 }
 </style>
