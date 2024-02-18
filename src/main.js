@@ -16,6 +16,9 @@ app.use(pinia);
 app.use(router);
 
 // Register your buefy plugin
-app.use(buefy);
+app.use(buefy, {
+  defaultIconPack: "fas",
+  // ...
+});
 
 app.mount("#app");
