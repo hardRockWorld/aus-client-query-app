@@ -2,7 +2,11 @@
   <section>
     <div class="container">
       <div class="columns is-multiline">
-        <div class="column is-4" v-for="(query, index) in queries" :key="query.id">
+        <div
+          class="column is-4"
+          v-for="(query, index) in queries"
+          :key="query.id"
+        >
           <div class="card">
             <header class="card-header has-background-primary">
               <p class="card-header-title has-text-white">
@@ -12,7 +16,10 @@
                 href="#"
                 class="card-header-icon"
                 aria-label="more options"
-                @click="editedQuery = query; editQuery(index)"
+                @click="
+                  editedQuery = query;
+                  editQuery(index);
+                "
               >
                 <span class="icon">
                   <font-awesome-icon
@@ -26,7 +33,9 @@
             </header>
             <div class="card-content">
               <div class="content">
-                <p><strong>Client Address:</strong> {{ query.clientAddress }}</p>
+                <p>
+                  <strong>Client Address:</strong> {{ query.clientAddress }}
+                </p>
                 <p><strong>Client Age:</strong> {{ query.clientAge }}</p>
                 <!-- Add more fields as needed -->
               </div>
@@ -35,7 +44,10 @@
               <a
                 href="#"
                 class="card-footer-item has-text-primary"
-                @click="editedQuery = query; editQuery(index)"
+                @click="
+                  editedQuery = query;
+                  editQuery(index);
+                "
                 >Edit</a
               >
             </footer>
@@ -103,8 +115,8 @@
 
           <b-field label="Gender" class="block" :label-position="labelPosition">
             <b-radio v-model="editedQuery.clientGender" native-value="Male"
-              >Male</b-radio
-            >
+              >Male
+            </b-radio>
             <b-radio v-model="editedQuery.clientGender" native-value="Female">
               Female
             </b-radio>
@@ -212,7 +224,11 @@
           </b-field>
         </section>
         <footer class="modal-card-foot">
-          <b-button class="button is-success is-fullwidth" @click.prevent="updateItem" :loading="Loading">
+          <b-button
+            class="button is-success is-fullwidth"
+            @click.prevent="updateItem"
+            :loading="loading"
+          >
             Save changes
           </b-button>
           <b-button class="button is-fullwidth" @click="closeModal">
@@ -225,15 +241,24 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed, onUnmounted, watch } from "vue";
-import { useSessionStore } from '@/stores/userSessionStore.js';
-import { useQueryStore } from '@/stores/querySessionStore.js';
+import {
+  ref,
+  reactive,
+  onMounted,
+  computed,
+  onUnmounted,
+  watch,
+  toRefs,
+} from "vue";
+import { useSessionStore } from "@/stores/userSessionStore.js";
+import { useQueryStore } from "@/stores/querySessionStore.js";
 import {
   fetchAllQueries,
   updateEditQuery,
   updateNonEditOrder,
 } from "@/db/dbQueries.js";
-import { db } from '@/db/fb.js'
+import { db } from "@/db/fb.js";
+import { NotificationProgrammatic as notification } from "@ntohq/buefy-next";
 
 // Initialize the session store here
 const sessionStore = useSessionStore();
@@ -249,26 +274,32 @@ const modalCloseWithoutSave = ref(false);
 const loading = ref(false);
 const labelPosition = "inside";
 
+// Parse the date object here
+const dateValue = ref(null);
 // Create ref for search query
-const searchQuery = ref('');
+const searchQuery = ref("");
 
 // Fetch items from Firestore
 const fetchQueries = async () => {
+  loading.value = true;
   queries.value = await fetchAllQueries();
 
   // After fetch all queries, save to the queryStore
   queryStore.saveQueries(queries.value);
+  loading.value = false;
 };
 
-
-// computed filtered orders property checks continously for any chnages to the orders and filterOrders method written below
+// computed filtered orders property checks continuously for any changes to the orders and filterOrders method written below
 const filteredQueries = computed(() => {
-    return queries.value.filter(query => query.clientName.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  return queries.value.filter((query) =>
+    query.clientName.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  );
 });
 
 // Open modal for editing an item
-const editQuery= (index) => {
-  editedQuery.value = { ...queries.value[index] };
+const editQuery = (index) => {
+  // Assign reactive proxy of the query to editedQuery
+  Object.assign(editedQuery, toRefs(queries.value[index]));
   showModal.value = true;
 };
 
@@ -278,19 +309,19 @@ const updateItem = async (index) => {
     // Button is disabled, do not save data
     return;
   }
-  
+
   loading.value = true;
-  
+
   const updateResult = await updateEditQuery(db, editedQuery.value);
   if (updateResult) {
     // Save the query data to the Pinia store
     queryStore.saveQueries(queries.value);
 
     notification.value.success = updateResult;
-    notification.value.msg = 'Saved successfully.';
+    notification.value.msg = "Saved successfully.";
   } else {
     notification.value.success = updateResult;
-    notification.value.msg = 'Failed.';
+    notification.value.msg = "Failed.";
   }
 
   loading.value = false;
@@ -301,29 +332,30 @@ const updateItem = async (index) => {
 const closeModal = () => {
   if (modalCloseWithoutSave) {
     // Handle the case where the modal was closed without saving changes
-  queries.value = queryStore.getQueries();
+    queries.value = queryStore.getQueries();
   }
 
   showModal.value = false;
   editedQuery.value = {};
 
   notification.value = {
-        success: true,
-        msg: ''
+    success: true,
+    msg: "",
   };
 
   modalCloseWithoutSave.value = false; // Reset the flag
-
 };
 
 // Fetch items when component is mounted
 onMounted(() => {
-
-  // Check if queryStore already has any query in it, if it has then then, get queries from the queryStore or else call the fetchQueries Method
-
-
-  // Get queries from the Pinia store when the component is mounted
-  queries.value = queryStore.getQueries();
+  // Check if queryStore already has any query in it, if it has then, get queries from the queryStore or else call the fetchQueries Method
+  if (queryStore.getQueries().length > 0) {
+    // Get queries from the Pinia store
+    queries.value = queryStore.getQueries();
+  } else {
+    // If there are no queries in the queryStore, fetch them
+    fetchQueries();
+  }
 });
 
 onUnmounted(() => {
@@ -331,15 +363,21 @@ onUnmounted(() => {
   queryStore.saveQueries(queries.value);
 });
 
-watch(() => queries.value, (newQueries) => {
-  queryStore.saveQueries(newQueries);
-});
+watch(
+  () => queries.value,
+  (newQueries) => {
+    queryStore.saveQueries(newQueries);
+  },
+);
 
 const isSaveButtonDisabled = computed(() => {
-    const noItem = currentOrder.value?.items == null || currentOrder.value?.items.length === 0;
-    const hasInvalidQuantity = currentOrder.value?.items.some(item => item.qty < 1);
+  const noItem =
+    currentOrder.value?.items == null || currentOrder.value?.items.length === 0;
+  const hasInvalidQuantity = currentOrder.value?.items.some(
+    (item) => item.qty < 1,
+  );
 
-    return hasInvalidQuantity || noItem;
+  return hasInvalidQuantity || noItem;
 });
 </script>
 

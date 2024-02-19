@@ -211,7 +211,7 @@ const blankQuery = {
   calledFor: "",
   querySubject: "",
   queryReceivedBy: "",
-  queryDate: new Date(),
+  queryDate: Date.now(),
   queryStatus: "placed",
   notes: [""],
   resolutionGiven: "",
