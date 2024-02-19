@@ -105,6 +105,7 @@
         icon="calendar-today"
         horizontal-time-picker
         v-model="query.queryDate"
+        :datetime-formatter="(date) => getFormattedDate(date, true)"
         id="client_queryDate"
         name="client_queryDate"
         required
@@ -189,6 +190,7 @@
 import { ref, computed, onMounted } from "vue";
 import { addNewQuery, fetchSingleDocRef } from "@/db/dbQueries.js";
 import { db } from "@/db/fb.js";
+import {getFormattedDate} from '@/util/util.js'
 import { useSessionStore } from "@/stores/userSessionStore";
 import { useQueryStore } from "@/stores/querySessionStore";
 import { ToastProgrammatic as Toast } from "@ntohq/buefy-next";
@@ -211,9 +213,9 @@ const blankQuery = {
   calledFor: "",
   querySubject: "",
   queryReceivedBy: "",
-  queryDate: Date.now(),
+  queryDate: new Date(),
   queryStatus: "placed",
-  notes: [""],
+  notes: [],
   resolutionGiven: "",
   remarks: "",
 };

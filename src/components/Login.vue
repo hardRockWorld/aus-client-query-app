@@ -113,7 +113,6 @@ const router = useRouter();
 const { setUser, getIsLoading } = useSessionStore();
 const user = auth.currentUser;
 const errorMessage = ref("");
-const isFullPage = true;
 const isLoading = ref(false);
 
 const emptyLoginRequest = {

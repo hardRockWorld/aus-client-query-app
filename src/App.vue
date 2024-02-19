@@ -18,7 +18,7 @@ onMounted(() => {
     proxyIsLoggedIn.value = !!user;
     currentUser.value = user;
     if (user) {
-      sessionStore.setUser(user, user.email, true, new Date().getTime());
+      sessionStore.setUser(user, user.email, true, (new Date()).getTime());
     } else {
       sessionStore.removeUser();
     }

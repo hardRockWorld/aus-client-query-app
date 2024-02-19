@@ -17,7 +17,7 @@
                 class="card-header-icon"
                 aria-label="more options"
                 @click="
-                  editedQuery = query;
+                  editedQuery.value = query.value;
                   editQuery(index);
                 "
               >
@@ -172,6 +172,7 @@
               icon="calendar-today"
               horizontal-time-picker
               v-model="editedQuery.queryDate"
+              :datetime-parser="(date) => parseDate(date)"
               id="client_queryDate"
               name="client_queryDate"
               required
@@ -267,15 +268,15 @@ const queryStore = useQueryStore();
 const queries = ref([]);
 // const currentQuery = ref(null);
 const showModal = ref(false);
-const editedQuery = reactive({});
+const editedQuery = ref({});
 // Introduce a flag to track saved changes in the modal
 const modalCloseWithoutSave = ref(false);
 
 const loading = ref(false);
 const labelPosition = "inside";
 
-// Parse the date object here
-const dateValue = ref(null);
+const showDate = ref();
+
 // Create ref for search query
 const searchQuery = ref("");
 
@@ -286,8 +287,36 @@ const fetchQueries = async () => {
 
   // After fetch all queries, save to the queryStore
   queryStore.saveQueries(queries.value);
+  
   loading.value = false;
 };
+
+// const formattedDates = computed(() => {
+//   const dates = {};
+//   for (const query of queries.value) {
+//     const timestampData = query.queryDate;
+//     console.log('our query date is: ', timestampData);
+//     if (timestampData) {
+//       try {
+//         dates[query.id] = convertDate(timestampData).toLocaleDateString();
+//       } catch (error) {
+//         console.error("Error converting date:", error);
+//         dates[query.id] = "N/A"; // Or a placeholder string for missing data
+//       }
+//     } else {
+//       dates[query.id] = null; // Handle missing timestamp
+//     }
+//   }
+//   return dates;
+// });
+
+// const convertDate = (timestampData) => {
+//   if (!timestampData) {
+//     console.error("Firebase Timestamp is undefined or null");
+//     throw new Error("Invalid timestamp data"); // You can also return null here
+//   }
+//   return timestampData.toDate();
+// };
 
 // computed filtered orders property checks continuously for any changes to the orders and filterOrders method written below
 const filteredQueries = computed(() => {
@@ -298,8 +327,7 @@ const filteredQueries = computed(() => {
 
 // Open modal for editing an item
 const editQuery = (index) => {
-  // Assign reactive proxy of the query to editedQuery
-  Object.assign(editedQuery, toRefs(queries.value[index]));
+  editedQuery.value = { ...queries.value[index] };
   showModal.value = true;
 };
 
