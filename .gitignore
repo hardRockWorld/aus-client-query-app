@@ -138,8 +138,8 @@ dist
 
 # for firebase,firebase emulator
 .firebase
-.firebaserc
-firebase.json
+# .firebaserc
+# firebase.json
 firestore.indexes.json
 firestore.rules
 firebase-debug.log

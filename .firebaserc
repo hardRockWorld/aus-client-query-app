@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "aus-client-query-app",
+    "staging": "aus-client-query-app-test"
+  },
+  "targets": {},
+  "etags": {}
+}
