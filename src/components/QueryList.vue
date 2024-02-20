@@ -172,7 +172,7 @@
               icon="calendar-today"
               horizontal-time-picker
               v-model="editedQuery.queryDate"
-              :datetime-parser="(date) => parseDate(date)"
+              :datetime-parser="parseDate"
               id="client_queryDate"
               name="client_queryDate"
               required
@@ -260,6 +260,7 @@ import {
 } from "@/db/dbQueries.js";
 import { db } from "@/db/fb.js";
 import { NotificationProgrammatic as notification } from "@ntohq/buefy-next";
+import { parseDate } from "@/util/util.js";
 
 // Initialize the session store here
 const sessionStore = useSessionStore();
@@ -275,7 +276,7 @@ const modalCloseWithoutSave = ref(false);
 const loading = ref(false);
 const labelPosition = "inside";
 
-const showDate = ref();
+const showDate = ref({});
 
 // Create ref for search query
 const searchQuery = ref("");
@@ -287,7 +288,7 @@ const fetchQueries = async () => {
 
   // After fetch all queries, save to the queryStore
   queryStore.saveQueries(queries.value);
-  
+
   loading.value = false;
 };
 
@@ -310,13 +311,13 @@ const fetchQueries = async () => {
 //   return dates;
 // });
 
-// const convertDate = (timestampData) => {
-//   if (!timestampData) {
-//     console.error("Firebase Timestamp is undefined or null");
-//     throw new Error("Invalid timestamp data"); // You can also return null here
-//   }
-//   return timestampData.toDate();
-// };
+const convertDate = (timestampData) => {
+  if (!timestampData) {
+    console.error("Firebase Timestamp is undefined or null");
+    throw new Error("Invalid timestamp data"); // You can also return null here
+  }
+  return timestampData.toDate();
+};
 
 // computed filtered orders property checks continuously for any changes to the orders and filterOrders method written below
 const filteredQueries = computed(() => {

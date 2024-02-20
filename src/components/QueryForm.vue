@@ -105,7 +105,7 @@
         icon="calendar-today"
         horizontal-time-picker
         v-model="query.queryDate"
-        :datetime-formatter="(date) => getFormattedDate(date, true)"
+        :datetime-formatter="(time) => new Intl.DateTimeFormat(locale).format(time)"
         id="client_queryDate"
         name="client_queryDate"
         required
