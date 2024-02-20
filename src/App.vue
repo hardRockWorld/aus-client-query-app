@@ -15,6 +15,12 @@ const path = computed(() => route.path);
 const proxyIsLoggedIn = ref(sessionStore.getUserLoggedIn);
 const currentUser = ref(null);
 
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+	isMenuOpen.value = !isMenuOpen.value;
+};
+
 onMounted(() => {
 	onAuthStateChanged(auth, user => {
 		proxyIsLoggedIn.value = !!user;
@@ -48,7 +54,7 @@ const logout = () => {
 	<section class="hero is-fullheight has-background-light">
 		<!-- Hero head: will stick at the top -->
 		<div class="hero-head">
-			<nav class="navbar">
+			<nav class="navbar" role="navigation" aria-label="main navigation">
 				<div class="container">
 					<div class="navbar-brand">
 						<RouterLink
@@ -63,17 +69,12 @@ const logout = () => {
 								/>
 							</a>
 						</RouterLink>
-						<a class="navbar-item">
-							<RouterLink
-								class="logo-link contrast"
-								to="/"
-								v-if="proxyIsLoggedIn"
-							>
-								<strong>Query Form</strong>
-							</RouterLink>
-						</a>
 						<span
 							class="navbar-burger"
+							@click="toggleMenu"
+							:class="{ 'is-active': isMenuOpen }"
+							aria-label="menu"
+							aria-expanded="false"
 							data-target="navbarMenuHeroA"
 						>
 							<span></span>
@@ -82,18 +83,13 @@ const logout = () => {
 						</span>
 					</div>
 
-					<div class="navbar-middle">
-						<h2
-							v-if="proxyIsLoggedIn && currentUser"
-							class="welcome-message"
-						>
-							Welcome, <strong>{{ currentUser.email }}</strong>
-						</h2>
-					</div>
-
-					<div id="navbarMenuHeroA" class="navbar-menu">
+					<div
+						id="navbarMenuHeroA"
+						class="navbar-menu"
+						:class="{ 'is-active': isMenuOpen }"
+					>
 						<div class="navbar-end">
-							<a class="navbar-item">
+							<div class="navbar-item">
 								<RouterLink
 									class="logo-link contrast"
 									to="/query-list"
@@ -101,7 +97,7 @@ const logout = () => {
 								>
 									<strong>Query List</strong>
 								</RouterLink>
-							</a>
+							</div>
 							<div class="navbar-item">
 								<div class="buttons">
 									<RouterLink
