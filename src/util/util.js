@@ -1,27 +1,24 @@
 const getFormattedDate = (date, withTime = true) => {
-  if (date === undefined) {
-    return "";
-  }
-  var year = date.getFullYear();
+    if (date === undefined) {
+        return "";
+    }
+    var year = date.getFullYear();
 
-  var month = (1 + date.getMonth()).toString();
-  month = month.length > 1 ? month : "0" + month;
+    var month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : "0" + month;
 
-  var day = date.getDate().toString();
-  day = day.length > 1 ? day : "0" + day;
+    var day = date.getDate().toString();
+    day = day.length > 1 ? day : "0" + day;
 
-  var hour = date.getHours().toString();
-  hour = hour.length > 1 ? hour : "0" + hour;
+    var hour = date.getHours().toString();
+    hour = hour.length > 1 ? hour : "0" + hour;
 
-  var minutes = date.getMinutes().toString();
-  minutes = minutes.length > 1 ? minutes : "0" + minutes;
+    var minutes = date.getMinutes().toString();
+    minutes = minutes.length > 1 ? minutes : "0" + minutes;
 
-  var sec = date.getSeconds().toString();
-  sec = sec.length > 1 ? sec : "0" + sec;
-
-  return withTime
-    ? year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + sec
-    : year + "-" + month + "-" + day;
+    return withTime
+        ? year + "-" + month + "-" + day + " " + hour + ":" + minutes
+        : year + "-" + month + "-" + day;
 };
 
 // const parseDate = (formattedDate) => {
@@ -56,19 +53,19 @@ const getFormattedDate = (date, withTime = true) => {
 //     return parsedDate;
 // }
 
-const parseDate = (date) => {
-  // Check if date is a string and not empty
-  if (typeof date === 'string' && date.trim() !== '') {
-    return new Date(date);
-  }
-  
-  // Check if date is a Date object
-  if (date instanceof Date && !isNaN(date.getTime())) {
-    return date;
-  }
+const parseDate = date => {
+    // Check if date is a string and not empty
+    if (typeof date === "string" && date.trim() !== "") {
+        return new Date(date);
+    }
 
-  // If none of the above, return null or handle it as appropriate for your use case
-  return null;
+    // Check if date is a Date object
+    if (date instanceof Date && !isNaN(date.getTime())) {
+        return date;
+    }
+
+    // If none of the above, return null or handle it as appropriate for your use case
+    return null;
 };
 
 export { getFormattedDate, parseDate };
