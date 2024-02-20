@@ -4,11 +4,9 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "firebase use staging && vite",
-		"build": "firebase use default && vite build --sourcemap=false",
-		"preview": "firebase use staging && vite preview",
-		"build-deploy": "firebase use default && vite build --sourcemap=false && firebase deploy --only hosting",
-		"debug": "firebase use staging && vite --mode development"
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.5.1",
