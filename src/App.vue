@@ -32,7 +32,7 @@ const logout = () => {
 	signOut(auth)
 		.then(() => {
 			console.log("Logged out");
-			queryStore.clearQueries();
+			sessionStorage.removeItem("queries");
 			sessionStorage.removeItem("dataFetched");
 			sessionStore.removeUser();
 			proxyIsLoggedIn.value = false;
@@ -87,7 +87,7 @@ const logout = () => {
 							v-if="proxyIsLoggedIn && currentUser"
 							class="welcome-message"
 						>
-							Welcome, {{ currentUser.email }}
+							Welcome, <strong>{{ currentUser.email }}</strong>
 						</h2>
 					</div>
 

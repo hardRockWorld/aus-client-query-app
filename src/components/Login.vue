@@ -7,11 +7,7 @@
 				</header>
 
 				<main>
-					<b-field
-						label="Email"
-						:label-position="labelPosition"
-						type="is-primary"
-					>
+					<b-field label="Email" :label-position="labelPosition">
 						<b-input
 							type="email"
 							id="email"
@@ -40,11 +36,7 @@
 						</template>
 					</b-field>
 
-					<b-field
-						label="Password"
-						:label-position="labelPosition"
-						type="is-primary is-light"
-					>
+					<b-field label="Password" :label-position="labelPosition">
 						<b-input
 							type="password"
 							id="password"
@@ -108,11 +100,13 @@ import {
 } from "firebase/auth";
 import { useSessionStore } from "@/stores/userSessionStore";
 import { auth } from "@/db/fb.js";
+import { ToastProgrammatic as Toast } from "@ntohq/buefy-next";
 
 const labelPosition = ref("inside");
 
 const router = useRouter();
 const { setUser, getIsLoading } = useSessionStore();
+const toast = new Toast();
 const user = auth.currentUser;
 const errorMessage = ref("");
 const isLoading = ref(false);
@@ -133,6 +127,12 @@ const login = async (email, password) => {
 				console.log("user is loggedin: ");
 				setUser(user, (email = email), true, new Date().getTime());
 
+				// Notify user of successful user login
+				toast.open({
+					message: "Logged in!",
+					type: "is-success"
+				});
+
 				// Show query form after successful login
 				router.push("/");
 			})
@@ -140,15 +140,35 @@ const login = async (email, password) => {
 				switch (error.code) {
 					case "auth/invalid-email":
 						errorMessage.value = "Email address is invalid.";
+						// Notify user of successful user login
+						toast.open({
+							message: errorMessage.value,
+							type: "is-success"
+						});
 						break;
 					case "auth/user-not-found":
 						errorMessage.value = "User not found!";
+						// Notify user of successful user login
+						toast.open({
+							message: errorMessage.value,
+							type: "is-success"
+						});
 						break;
 					case "auth/wrong-password":
 						errorMessage.value = "Email/password is wrong.";
+						// Notify user of successful user login
+						toast.open({
+							message: errorMessage.value,
+							type: "is-success"
+						});
 						break;
 					case "auth/invalid-credential":
 						errorMessage.value = "invalid Login credentials.";
+						// Notify user of successful user login
+						toast.open({
+							message: errorMessage.value,
+							type: "is-success"
+						});
 						break;
 				}
 			})

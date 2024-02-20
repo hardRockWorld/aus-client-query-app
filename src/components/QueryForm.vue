@@ -45,17 +45,44 @@
 				id="client_age"
 				name="client_age"
 				placeholder="Client age"
-			></b-numberinput>
+			>
+				<template #prefix>
+					<font-awesome-icon
+						icon="plus"
+						size="sm"
+						style="color: #ffffff"
+						aria-hidden="true"
+					/>
+				</template>
+				<template #suffix>
+					<font-awesome-icon
+						icon="minus"
+						size="sm"
+						style="color: #ffffff"
+						aria-hidden="true"
+					/>
+				</template>
+			</b-numberinput>
 		</b-field>
 
-		<div class="block">
-			<b-radio v-model="query.clientGender" native-value="Male"
-				>Male</b-radio
-			>
-			<b-radio v-model="query.clientGender" native-value="Female">
-				Female
-			</b-radio>
-		</div>
+		<b-field label="Gender" class="gender-field">
+			<div class="block">
+				<b-radio
+					v-model="query.clientGender"
+					name="male"
+					native-value="Male"
+				>
+					Male
+				</b-radio>
+				<b-radio
+					v-model="query.clientGender"
+					name="female"
+					native-value="Female"
+				>
+					Female
+				</b-radio>
+			</div>
+		</b-field>
 
 		<b-field label="Contact No." :label-position="labelPosition">
 			<b-input
@@ -137,7 +164,11 @@
 			</b-taginput>
 		</b-field>
 
-		<b-field label="Resolution Given" :label-position="labelPosition">
+		<b-field
+			label="Resolution Given"
+			:label-position="labelPosition"
+			v-if="showResolutionGiven"
+		>
 			<b-input
 				maxlength="300"
 				type="textarea"
@@ -148,7 +179,11 @@
 			></b-input>
 		</b-field>
 
-		<b-field label="Remarks" :label-position="labelPosition">
+		<b-field
+			label="Remarks"
+			:label-position="labelPosition"
+			v-if="showRemarks"
+		>
 			<b-input
 				maxlength="100"
 				type="textarea"
@@ -172,7 +207,8 @@
 	</section>
 </template>
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
 import { addNewQuery, fetchSingleDocRef } from "@/db/dbQueries.js";
 import { db } from "@/db/fb.js";
 import { getFormattedDate } from "@/util/util.js";
@@ -182,10 +218,14 @@ import { ToastProgrammatic as Toast } from "@ntohq/buefy-next";
 
 const sessionStore = useSessionStore();
 const queryStore = useQueryStore();
+const router = useRouter();
 const toast = new Toast();
 
 const loading = ref(false);
 const labelPosition = "inside";
+
+const showResolutionGiven = ref(false);
+const showRemarks = ref(false);
 
 const blankQuery = {
 	clientName: "",
@@ -206,6 +246,30 @@ const blankQuery = {
 };
 
 const query = ref({ ...blankQuery });
+
+// Check if the user is logged in
+const loggedIn = computed(() => sessionStore.getUser() !== null);
+
+// Check if the current route is /queryList
+const isQueryListRoute = computed(
+	() => router.currentRoute.value.path === "/queryList"
+);
+
+// Watch for changes in user login status and current route
+watch([loggedIn, isQueryListRoute], ([isLoggedIn, isQueryList]) => {
+	if (isLoggedIn && isQueryList) {
+		// User is logged in and on /queryList route, show resolution given and remarks fields
+		showResolutionGiven.value = true;
+		showRemarks.value = true;
+	} else {
+		// User is not logged in or not on /queryList route, hide resolution given and remarks fields
+		showResolutionGiven.value = false;
+		showRemarks.value = false;
+		// Clear resolution given and remarks data
+		query.resolutionGiven = "";
+		query.remarks = "";
+	}
+});
 
 const notificationMsg = ref("");
 
@@ -231,6 +295,10 @@ const submit = async () => {
 		loading.value = false;
 	} else {
 		notificationMsg.value = `Did not Save..`;
+		toast.open({
+			message: notificationMsg.value,
+			type: "is-danger"
+		});
 		loading.value = false;
 	}
 };
@@ -245,12 +313,12 @@ const isSaveButtonDisabled = computed(() => {
 	return hasInvalidQuantity || hasInvalidName || noItem;
 });
 
-onMounted(() => {
-	toast.open({
-		message: "Logged in!",
-		type: "is-success"
-	});
-});
+// onMounted(() => {
+// 	toast.open({
+// 		message: "Logged in!",
+// 		type: "is-success"
+// 	});
+// });
 </script>
 
 <style scoped>
@@ -265,7 +333,18 @@ onMounted(() => {
 	margin-bottom: 1rem;
 }
 
-.block {
+/* .block {
 	margin: 1rem;
+} */
+
+.gender-field {
+	margin-bottom: 1rem; /* Add margin bottom for spacing */
+	display: flex;
+	justify-content: space-between;
+	width: calc(50% - 15px); /* Set width to 50% with margin */
+}
+
+.gender-field .control label {
+	margin-left: 2rem; /* Add margin between radio buttons */
 }
 </style>

@@ -9,10 +9,15 @@ import App from "./App.vue";
 import router from "./router/router.js";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+	fas,
+	faPenToSquare,
+	faPlus,
+	faMinus
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faPenToSquare);
+library.add(fas, faPenToSquare, faPlus, faMinus);
 
 const app = createApp(App);
 
@@ -21,8 +26,8 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 
 // Register your buefy plugin
 app.use(buefy, {
-  defaultIconPack: "fas",
-  // ...
+	defaultIconPack: "fas"
+	// ...
 });
 
 const pinia = createPinia();

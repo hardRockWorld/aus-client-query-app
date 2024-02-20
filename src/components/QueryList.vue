@@ -1,10 +1,23 @@
 <template>
 	<section>
 		<div class="container">
+			<div class="search-block mb-4">
+				<b-field label="Search">
+					<b-input
+						placeholder="Search a Query"
+						type="search"
+						id="search"
+						name="search"
+						v-model="searchQuery"
+						rounded
+					></b-input>
+				</b-field>
+			</div>
+
 			<div class="columns is-multiline">
 				<div
 					class="column is-4"
-					v-for="(query, index) in queries"
+					v-for="(query, index) in filteredQueries"
 					:key="query.id"
 				>
 					<div class="card">
@@ -38,10 +51,18 @@
 									{{ query.clientAddress }}
 								</p>
 								<p>
-									<strong>Client Age:</strong>
+									<strong>Age:</strong>
 									{{ query.clientAge }}
 								</p>
 								<!-- Add more fields as needed -->
+								<p>
+									<strong>Query Date</strong>
+									{{ query.queryDate }}
+								</p>
+								<p>
+									<strong>Query Status</strong>
+									{{ query.queryStatus }}
+								</p>
 							</div>
 						</div>
 						<footer class="card-footer">
@@ -114,7 +135,24 @@
 							id="client_age"
 							name="client_age"
 							placeholder="Client age"
-						></b-numberinput>
+						>
+							<template #prefix>
+								<font-awesome-icon
+									icon="plus"
+									size="sm"
+									style="color: #ffffff"
+									aria-hidden="true"
+								/>
+							</template>
+							<template #suffix>
+								<font-awesome-icon
+									icon="minus"
+									size="sm"
+									style="color: #ffffff"
+									aria-hidden="true"
+								/>
+							</template>
+						</b-numberinput>
 					</b-field>
 
 					<b-field label="Query Status" class="query-status-field">
@@ -300,7 +338,7 @@ import {
 	updateEditQuery,
 	updateNonEditOrder
 } from "@/db/dbQueries.js";
-import { db } from "@/db/fb.js";
+import { db, auth } from "@/db/fb.js";
 import { NotificationProgrammatic as Notification } from "@ntohq/buefy-next";
 
 // Initialize the session store here
@@ -356,7 +394,7 @@ const updateItem = async () => {
 	loading.value = true;
 
 	const updateResult = await updateEditQuery(db, editedQuery.value);
-	console.log("updated result is: ", updateResult);
+	console.log("Query Updated? : ", updateResult === true ? "Yes" : "No");
 
 	if (updateResult) {
 		// Find the index of the edited query in the queries array
@@ -401,8 +439,16 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-	// Save queries to the Pinia store when the component is unmounted
-	queryStore.saveQueries(queries.value);
+	const user = auth.currentUser;
+
+	// Check if user is logged in
+	if (user) {
+		// Save queries to the Pinia store when the component is unmounted
+		queryStore.saveQueries(queries.value);
+	} else {
+		// Clear session storage data if user is logged out
+		sessionStorage.removeItem("queries");
+	}
 });
 
 watch(
@@ -451,6 +497,15 @@ const showErrorNotification = (message, type) => {
 
 <style scoped>
 /* Custom CSS for "Query Status" and "Gender" fields */
+
+.container {
+	margin: auto;
+}
+
+.search-block {
+	margin-top: 0;
+}
+
 .query-status-field,
 .gender-field {
 	margin-bottom: 1rem; /* Add margin bottom for spacing */

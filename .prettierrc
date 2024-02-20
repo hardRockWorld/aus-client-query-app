@@ -1,0 +1,13 @@
+{
+	"useTabs": true,
+	"tabWidth": 4,
+	"indent": 2,
+	"continuationIndent": 2,
+	"indentEmptyLines": false,
+	"semi": true,
+	"singleQuote": false,
+	"printWidth": 80,
+	"trailingComma": "none",
+	"bracketSpacing": true,
+	"arrowParens": "avoid"
+}

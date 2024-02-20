@@ -145,6 +145,3 @@ firestore.rules
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
-
-# Prettier configs
-.prettierrc
