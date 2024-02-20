@@ -69,6 +69,17 @@ const logout = () => {
 								/>
 							</a>
 						</RouterLink>
+
+						<div class="navbar-middle">
+							<h2
+								v-if="proxyIsLoggedIn && currentUser"
+								class="welcome-message"
+							>
+								Welcome,
+								<strong>{{ currentUser.email }}</strong>
+							</h2>
+						</div>
+
 						<span
 							class="navbar-burger"
 							@click="toggleMenu"
@@ -89,6 +100,15 @@ const logout = () => {
 						:class="{ 'is-active': isMenuOpen }"
 					>
 						<div class="navbar-end">
+							<div class="navbar-item">
+								<RouterLink
+									class="logo-link contrast"
+									to="/"
+									v-if="proxyIsLoggedIn"
+								>
+									<strong>Query Form</strong>
+								</RouterLink>
+							</div>
 							<div class="navbar-item">
 								<RouterLink
 									class="logo-link contrast"
