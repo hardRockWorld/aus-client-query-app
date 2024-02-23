@@ -535,4 +535,10 @@ const showErrorNotification = (message, type) => {
 .card-footer {
 	border-radius: 0 0 8px 8px;
 }
+
+/* Fix for font awesome icon size */
+.card-header-icon .icon svg {
+	width: 1.5rem; /* Adjust the width as needed */
+	height: 1.5rem; /* Adjust the height as needed */
+}
 </style>
